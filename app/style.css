@@ -11,3 +11,5 @@ h1{max-width:900px;letter-spacing:-1px;line-height:1.06}.intro{max-width:800px}.
 .views{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.views button{font-size:14px;padding:10px 16px;border:1px solid var(--duke-navy-blue);background:white;color:var(--duke-navy-blue)}.views button[aria-pressed=true]{color:white;background:var(--duke-navy-blue)}@media(max-width:550px){.views{display:grid;grid-template-columns:1fr 1fr}.views button{padding:10px;font-size:13px}}
 
 .demo{display:block}
+
+.learning-links{font-size:14px;margin-top:18px}.learning-links a{display:inline-block;min-height:28px}.controls .copy-row{display:block;margin-bottom:0}.controls .copy-row button{width:100%;margin-top:12px}.controls .copy-row strong{font-size:13px}.map-actions{flex-wrap:wrap}.map-actions .secondary{height:auto;min-height:38px}#ranking-interpretation{color:white;line-height:1.6}.map-note{line-height:1.7}

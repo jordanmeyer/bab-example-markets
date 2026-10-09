@@ -19,3 +19,7 @@ Browser App Builder Build, Evaluate, Deploy and Leaflet guidance structure the w
 ## Evidence and limits
 
 [Evaluation](EVALUATION.md) retains actual checks and failed rounds; [independent review](REVIEW.md) names reviewed commits; [deployment](DEPLOYMENT.md) identifies published versions. Sensitivity checks whole-number weights, not every possible fractional crossover. Scores are discussion aids, not forecasts, customer discovery or actual market attractiveness. Inputs remain in memory; copied rationale carries the assumptions and provenance.
+
+## Try the lesson
+
+[Prediction exercises and answers](WALKTHROUGH.md) connect weight sensitivity, Florida's feasibility ceiling, Louisiana's missing-data policy and a short assumptions worksheet. An optional one-assumption editor is a bounded student extension, not an implemented feature. Current corrections use precise addressable-market terminology and distinguish map status from priority. Screen-reader, novice and physical touch evidence is not claimed.

@@ -72,3 +72,13 @@ Decision: keep real Census geometry for geographic learning and explicitly separ
 Concrete checks: npm ci with temporary cache, approved inventory checker, npm run build, testserver9725 and preview9726 under repository prefix. Same-origin authored1440/390/320 frames preserve the shared browser viewport. Capture actual metrics/fonts, rank-change70, sensitivity, exact gate boundary, invalid/zero recovery, selection/pins/copy and pre-interaction Back consistency. Reports preserve failed rounds. Keep source/PLAN clean before final run; report-only commits may follow without retesting unchanged source.
 
 Final implementation review: source/model/UI inspected together. Simplified entry-driven rank movement to share one gate-cause message; removed obsolete statistics styles and old Apply handler. Kept one update operation for live input/Enter, one comparison anchor and one scoring policy. Last exploratory320 frame showed319/319; native Enter opened map/detail and missing Louisiana contributions, Tab from view reached Reset. Pin limit message remains visible outside collapsed supporting panels; exact249999.99 ceiling preserved Virginia pin with250000 exclusion. Final source checkpoint next.
+
+## Checklist correction continuation — October 9, 2026
+
+- [x] Correct MKT-01 terminology and retain unrounded scoring.
+- [x] Add gate/missing/precision interpretation, distinct map status, movement toggle/Escape, persistence guidance and bounded exercises.
+- [x] Add boundary tests for Florida equality and three distinct candidate states; add authored 200% text harness.
+- [ ] Run model/build checks and independent production/browser review.
+- [ ] Obtain actual novice/screen-reader/physical-touch evidence before claiming those tasks verified.
+
+No new scoring factor, feed or assumption editor was added. Optional MKT-13 is an explicit student implementation assignment with provenance, reset and boundary-test requirements.

@@ -10,10 +10,11 @@ import {markets,metrics,defaults,validate,rank,raw,money,cost,compact,rationale,
 
 const d=duke(),el=id=>document.getElementById(id),form=el('settings');
 let settings={...defaults},result=rank(markets,settings),selected='NC',pins=['GA','TN','NC'];
+let moving=false;
 const stateLayers=new Map(),fills=['hatteras','shale-blue','royal-blue','prussian-blue','navy-blue'].map(name=>getComputedStyle(document.documentElement).getPropertyValue(`--duke-${name}`).trim());
 el('weight-fields').innerHTML=metrics.map(metric=>`<label class="weight-field">${metric.short}<span class="weight-input"><input name="${metric.id}" aria-label="${metric.short} weight" type="number" min="0" max="100" step="1" value="${defaults[metric.id]}" aria-describedby="${metric.id}-error"><span id="${metric.id}-share"></span></span><span class="anchor">${metric.anchor} · ${metric.direction}</span><span id="${metric.id}-error" class="error"></span></label>`).join('');
 el('market-select').innerHTML=markets.map(row=>`<option value="${row.id}">${row.name}</option>`).join('');
-const map=L.map('map',{scrollWheelZoom:false,zoomControl:true,minZoom:4,maxZoom:8,attributionControl:true});
+const map=L.map('map',{scrollWheelZoom:false,dragging:false,touchZoom:false,keyboard:false,zoomControl:true,minZoom:4,maxZoom:8,attributionControl:true});
 map.attributionControl.setPrefix('<a href="https://leafletjs.com">Leaflet</a>');
 map.attributionControl.addAttribution('Boundaries: <a href="https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2024/State_County/MapServer/9">U.S. Census Bureau</a>');
 L.geoJSON(geography,{filter:feature=>!markets.some(row=>row.id===feature.properties.id),interactive:false,style:{fillColor:d.panel,fillOpacity:1,color:d.paper,weight:1}}).addTo(map);
@@ -39,18 +40,18 @@ function renderMap(){
  const valueOf=row=>metric==='score'?(row.eligible?row.score:null):row.components.find(item=>item.id===metric).score;
  const cuts=[...new Set(result.rows.map(valueOf).filter(value=>value!==null))].sort((a,b)=>b-a).slice(0,4).reverse();
  for(const row of result.rows){
-  const value=valueOf(row),fill=value===null?'#F3F2F1':fills[cuts.filter(cut=>value>=cut).length];
-  const layer=stateLayers.get(row.id);layer.setStyle({fillColor:fill,fillOpacity:1,color:row.id===selected?d.copper:row.eligible?d.paper:d.copper,weight:row.id===selected?4:1.5,dashArray:row.eligible?null:'4 3'});
-  const label=document.createElement('span');label.textContent=`${row.id} ${row.eligible?(row.rank??'—'):'×'}${pins.includes(row.id)?' ★':''}`;
+  const value=valueOf(row),fill=value===null?(row.missing.length?'#FCF7E5':'#F3F2F1'):fills[cuts.filter(cut=>value>=cut).length];
+  const layer=stateLayers.get(row.id);layer.setStyle({fillColor:fill,fillOpacity:1,color:row.id===selected?d.copper:row.eligible?d.paper:d.copper,weight:row.id===selected?4:1.5,dashArray:row.missing.length?'1 3':row.eligible?null:'4 3'});
+  const label=document.createElement('span');label.textContent=`${row.id} ${row.missing.length?'?':row.eligible?(row.rank??'—'):'×'}${pins.includes(row.id)?' ★':''}`;
   layer.setTooltipContent(label);if(row.id===selected)layer.bringToFront();
  }
  const metricName=metric==='score'?'Priority score / 100':`${metrics.find(item=>item.id===metric).short} score / 100`;
  const labels=cuts.length?[`< ${cuts[0].toFixed(2)}`,...cuts.map((cut,i)=>i===cuts.length-1?`≥ ${cut.toFixed(2)}`:`${cut.toFixed(2)} – < ${cuts[i+1].toFixed(2)}`)]:[];
- el('legend').innerHTML=`<strong>${metricName}</strong>${labels.map((label,i)=>`<span><i style="background:${fills[i]}"></i>${label}</span>`).join('')}<span><i style="background:#F3F2F1"></i>${metric==='score'?'Excluded / unscored':'Missing'}</span><small>Bands separate the four highest distinct values in this view. Thresholds shown rounded. Darker means a higher score; score anchors stay fixed.</small>`;
+ el('legend').innerHTML=`<strong>${metricName}</strong>${labels.map((label,i)=>`<span><i style="background:${fills[i]}"></i>${label}</span>`).join('')}<span><i style="background:#F3F2F1"></i>× Fails a cost ceiling</span><span><i style="background:#FCF7E5"></i>? Missing required data</span><span>Rank number: eligible, including low scores · —: zero weights</span><small>Bands separate the four highest distinct values in this view. Thresholds shown rounded. Darker means a higher score in this view. Shades are not comparable across edits; even a tiny difference can change band. Compare exact scores and assumptions.</small>`;
 }
 function renderDetail(){
  const row=result.rows.find(row=>row.id===selected);el('detail-title').textContent=row.name;el('market-select').value=selected;
- el('detail').innerHTML=`<div class="detail-summary"><div class="detail-score"><strong>${scoreText(row)}</strong><span>${row.score===null?'No priority score':row.eligible?'priority score / 100':'illustrative score · excluded'}</span></div><div><p class="status ${row.eligible?'':'excluded'}">${status(row)}</p><p class="hint">Setup: <strong>${money(row.setup)}</strong> · current ceiling ${cost(settings.setupLimit)}</p></div><button id="detail-pin" data-pin="${row.id}" class="secondary" type="button">${pins.includes(row.id)?'Unpin':'Pin'} ${row.name}</button></div><details class="component-detail"><summary>Score contributions and next investigation</summary><div class="components">${row.components.map((part,i)=>`<article><h3>${metrics[i].short}</h3><p class="raw-value">${raw(row,part.id)}<small>${metrics[i].unit}</small></p><p class="anchor">${metrics[i].anchor}${part.capped?' · capped':''}</p><div class="contribution-bar"><span style="width:${part.contribution??0}%"></span></div><p><strong>${part.contribution===null?'—':part.contribution.toFixed(2)}</strong> points <span>(${part.score===null?'missing':part.score.toFixed(1)} × ${part.share===null?'no weight':(part.share*100).toFixed(1)+'%'})</span></p></article>`).join('')}</div><p class="investigate"><strong>Investigate next</strong> ${row.note}</p></details>`;
+ el('detail').innerHTML=`<div class="detail-summary"><div class="detail-score"><strong>${scoreText(row)}</strong><span>${row.score===null?'No priority score':row.eligible?'priority score / 100':'illustrative score · excluded'}</span></div><div><p class="status ${row.eligible?'':'excluded'}">${status(row)}</p>${row.missing.length?'<p class="hint">Complete data are required for a comparable shortlist, even when the missing measure has zero weight. Missing is not zero; debate this policy in the walkthrough.</p>':''}<p class="hint">Setup: <strong>${money(row.setup)}</strong> · current ceiling ${cost(settings.setupLimit)}</p></div><button id="detail-pin" data-pin="${row.id}" class="secondary" type="button">${pins.includes(row.id)?'Unpin':'Pin'} ${row.name}</button></div><details class="component-detail"><summary>Score contributions and next investigation</summary><div class="components">${row.components.map((part,i)=>`<article><h3>${metrics[i].short}</h3><p class="raw-value">${raw(row,part.id)}<small>${metrics[i].unit}</small></p><p class="anchor">${metrics[i].anchor}${part.capped?' · capped':''}</p><div class="contribution-bar"><span style="width:${part.contribution??0}%"></span></div><p><strong>${part.contribution===null?'—':part.contribution.toFixed(2)}</strong> points <span>(${part.score===null?'missing':part.score.toFixed(1)} × ${part.share===null?'no weight':(part.share*100).toFixed(1)+'%'})</span></p></article>`).join('')}</div><p class="investigate"><strong>Investigate next</strong> ${row.note}</p></details>`;
 }
 function renderLedger(){
  const filter=el('table-filter').value;
@@ -66,8 +67,9 @@ function renderPins(){
 function render(){
  for(const {id} of metrics)el(`${id}-share`).textContent=result.weightTotal?`${(settings[id]/result.weightTotal*100).toFixed(1)}% applied`:'No weight';
  el('eligible-count').textContent=`${result.rows.filter(row=>row.eligible).length} / 12 eligible`;
+ el('ranking-interpretation').textContent=result.top.length>1&&result.top[0].score-result.top[1].score<2?`Close under these assumed weights: ${result.top[0].name} leads ${result.top[1].name} by ${(result.top[0].score-result.top[1].score).toFixed(2)} points. Precision is arithmetic, not certainty.`:'Scores reflect the selected assumptions; they are not a confidence level.';
  el('ranking-note').textContent=!result.weightTotal?'All weights are zero. No priority score or ranking is assigned.':!result.top.length?'No market qualifies under these ceilings. Review the exclusions below.':`${result.ranked.length} complete, eligible markets ranked. ${result.top.length<3?'Fewer than three qualify.':'The top three are a starting point for investigation.'}`;
- el('top-three').innerHTML=result.top.map(row=>`<article><span class="rank-number">${String(row.rank).padStart(2,'0')}</span><div><h3><button type="button" data-select="${row.id}">${row.name}</button></h3><p>${compact(row.revenue)} revenue · ${raw(row,'growth')} growth</p></div><strong>${row.score.toFixed(2)}<small>priority / 100</small></strong></article>`).join('');
+ el('top-three').innerHTML=result.top.map(row=>`<article><span class="rank-number">${String(row.rank).padStart(2,'0')}</span><div><h3><button type="button" data-select="${row.id}">${row.name}</button></h3><p>${compact(row.revenue)} addressable market/year · ${raw(row,'growth')} growth</p></div><strong>${row.score.toFixed(2)}<small>priority / 100</small></strong></article>`).join('');
  renderMap();renderDetail();renderLedger();renderPins();renderSensitivity();
  const changes=rankChanges(markets,defaults,settings);
  el('rank-changes').parentElement.open=changes.length>0;
@@ -101,12 +103,15 @@ document.addEventListener('click',event=>{
  el('pin-status').textContent=`${markets.find(row=>row.id===id).name} ${wasPinned?'removed from':'added to'} your comparison.`;
  (el(focusId)??el('pin-'+id)??el('copy')).focus();
 });
+function movement(enabled){moving=enabled;for(const mode of [map.dragging,map.touchZoom,map.keyboard])enabled?mode.enable():mode.disable();el('map-move').setAttribute('aria-pressed',String(enabled));el('map-move').textContent=enabled?'Stop map movement':'Enable map movement';}
+el('map-move').addEventListener('click',()=>movement(!moving));
+el('map').addEventListener('keydown',event=>{if(event.key==='Escape'){movement(false);el('map-move').focus();}});
 el('market-select').addEventListener('change',event=>selectMarket(event.target.value));
 el('sensitivity-metric').addEventListener('change',renderSensitivity);
 el('map-metric').addEventListener('change',renderMap);el('table-filter').addEventListener('change',renderLedger);el('fit').addEventListener('click',fit);
-el('toggle-map').addEventListener('click',()=>{const hidden=!el('map-content').hidden;el('map-content').hidden=hidden;el('toggle-map').textContent=hidden?'Show map':'Hide map';el('toggle-map').setAttribute('aria-expanded',String(!hidden));if(!hidden){map.invalidateSize({pan:false});fit();}});
+el('toggle-map').addEventListener('click',()=>{const hidden=!el('map-content').hidden;el('map-content').hidden=hidden;if(hidden)movement(false);el('toggle-map').textContent=hidden?'Show map':'Hide map';el('toggle-map').setAttribute('aria-expanded',String(!hidden));if(!hidden){map.invalidateSize({pan:false});fit();}});
 el('reset').addEventListener('click',()=>{
- settings={...defaults};result=rank(markets,settings);selected='NC';pins=['GA','TN','NC'];form.reset();form.querySelectorAll('.error').forEach(node=>node.textContent='');form.querySelectorAll('[aria-invalid]').forEach(node=>node.removeAttribute('aria-invalid'));el('map-metric').value='score';el('sensitivity-metric').value='growth';el('copy').disabled=false;el('table-filter').value='all';el('copy-fallback').hidden=true;el('copy-status').textContent='';el('pin-status').textContent='';el('map-content').hidden=false;el('toggle-map').textContent='Hide map';el('toggle-map').setAttribute('aria-expanded','true');render();showView('ranking');el('form-status').textContent='Starting screen and its three pinned candidates restored.';el('form-status').classList.remove('pending');
+ movement(false);settings={...defaults};result=rank(markets,settings);selected='NC';pins=['GA','TN','NC'];form.reset();form.querySelectorAll('.error').forEach(node=>node.textContent='');form.querySelectorAll('[aria-invalid]').forEach(node=>node.removeAttribute('aria-invalid'));el('map-metric').value='score';el('sensitivity-metric').value='growth';el('copy').disabled=false;el('table-filter').value='all';el('copy-fallback').hidden=true;el('copy-status').textContent='';el('pin-status').textContent='';el('map-content').hidden=false;el('toggle-map').textContent='Hide map';el('toggle-map').setAttribute('aria-expanded','true');render();showView('ranking');el('form-status').textContent='Starting screen and its three pinned candidates restored.';el('form-status').classList.remove('pending');
 });
 el('copy').addEventListener('click',async()=>{
  const text=rationale(result,settings,pins);

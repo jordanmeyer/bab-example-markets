@@ -17,3 +17,7 @@ Retain real public geometry because geographic context is part of the opening br
 Canonical local licensed fonts replace fallbacks. Public BUILD-STORY preserves the actual original simulated planning and points to revised PLAN/evidence. Exact dependencies and source history remain unchanged; no service, telemetry or persistent storage added.
 
 Exploratory layout measured2546px desktop and3813px at389px wide even after disclosures. Split the two main analytical views into explicit Ranking and sensitivity / Map and market detail buttons; controls remain shared. Selecting a candidate opens its detail view. This addresses page length without reducing type size or hiding every input.
+
+## Checklist corrections — October 9, 2026
+
+Keep the fixed model and replace ambiguous revenue labels with addressable market. Separate missing/gate status arrays so the map can use distinct symbols without parsing explanation prose. An explicit movement toggle avoids trapping narrow-page gestures; Escape restores a predictable focus target. Keep adaptive map bands, but put their comparison limit in the exercise, legend and copied rationale. Teach omitted assumptions through a worksheet rather than inventing additional factors or live data.
