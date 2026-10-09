@@ -13,7 +13,8 @@ Help a fictional refill-supply business compare12 states without mistaking a wei
 - [x] Initialize separate root from managed starter; install exact Leaflet1.9.4; fetch official local geometry.
 - [x] (2026-10-09) Implement full model, local Leaflet map, linked ledger/detail, manual pins and copied rationale.
 - [x] (2026-10-09)17/17 browser model/geometry checks and production edge interactions passed; fix observed319→874px narrow overflow from absolute accessible-name spans, then verify319/319 and zero page horizontal scroll.
-- [ ] Freeze clean checkpoint and complete independent review/revisions.
+- [x] (2026-10-09) Freeze initial source and retain final-check failure: native history restored form values but default results. Disable native form restoration; applied/pending away-Back cases reset consistently.
+- [ ] Freeze revised source and complete independent review/witness.
 - [ ] Handoff passing source/reports to coordinator for publication.
 
 ## Surprises & Discoveries
@@ -26,7 +27,7 @@ Native forms/tables plus Leaflet serve this12-market scope. Fixed score anchors 
 
 ## Outcomes & Retrospective
 
-Implementation and exploratory17-case suite/product checks are complete. Real narrow overflow was diagnosed and fixed without document-wide clipping. Source freeze, independent pass and publication are pending.
+Implementation and exploratory17-case suite/product checks are complete. Real narrow overflow was diagnosed and fixed without document-wide clipping. Initial source and final17-case suite were checked. A native history form/result mismatch was found and corrected with autocomplete disabled; revised source, independent pass and publication are pending.
 
 ## Context and Orientation
 
