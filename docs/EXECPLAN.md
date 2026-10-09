@@ -59,3 +59,16 @@ All required workflow documents will identify exact tested source, simulated exc
 validate(settings) returns field errors; assess(market,settings) returns component scores/contributions, eligibility reasons and total; rank(markets,settings) returns all assessed rows and eligible ordered rows. All application state stays in memory. Leaflet1.9.4 supplies local polygon/label/map controls; no tile layer/default remote icons. Cleanup skips persisted pagehide and removes map/observer on actual destruction.
 
 Follow-up: independently reproduced native restoration mismatch also affected outside-form selects. Disable restoration on the affected selectors, verify actual Back before interaction, and freeze a new source checkpoint.
+
+
+## Live revision — October 9, 2026
+
+Purpose: restore the brief's missing rank-change explanation and teach robustness to priorities. Owner authorized substantive changes; no new student approval claimed.
+
+Progress: [x] Read current workflow, design guidance, full common and Markets checklist, original brief/plan. [x] Implement stable starting-screen rank explanations,101-point held-fixed sensitivity, adaptive ordered map bands, live valid inputs, pre-pinned leaders, disclosures, local fonts and public build story. [x] Derive GA/TN crossover27.5 and growth70 expectations independently in PLAN. [ ] Complete25 browser checks and actual production controls/copy/Back/keyboard/fonts/layout. [ ] Source checkpoint, independent review and authorized publication.
+
+Decision: keep real Census geometry for geographic learning and explicitly separate invented business inputs at the map. Largest relative-contribution changes explain moved peers; gate changes explain entries/exits. Swept integer ranges avoid fabricated continuous precision. No new dependency or persistence abstraction. A separate simplification pass will inspect surrounding source and remove duplicate policies.
+
+Concrete checks: npm ci with temporary cache, approved inventory checker, npm run build, testserver9725 and preview9726 under repository prefix. Same-origin authored1440/390/320 frames preserve the shared browser viewport. Capture actual metrics/fonts, rank-change70, sensitivity, exact gate boundary, invalid/zero recovery, selection/pins/copy and pre-interaction Back consistency. Reports preserve failed rounds. Keep source/PLAN clean before final run; report-only commits may follow without retesting unchanged source.
+
+Final implementation review: source/model/UI inspected together. Simplified entry-driven rank movement to share one gate-cause message; removed obsolete statistics styles and old Apply handler. Kept one update operation for live input/Enter, one comparison anchor and one scoring policy. Last exploratory320 frame showed319/319; native Enter opened map/detail and missing Louisiana contributions, Tab from view reached Reset. Pin limit message remains visible outside collapsed supporting panels; exact249999.99 ceiling preserved Virginia pin with250000 exclusion. Final source checkpoint next.

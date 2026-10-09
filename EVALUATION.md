@@ -25,3 +25,16 @@ Relevant executable paths: app/, tests/, .github/workflows/, package.json, packa
 The reviewer broadened the same history boundary to outside-form native selects. Actual VA/growth/excluded→away/Back restored those controls while detail remainedNC, legend Priority score, and ledger12rows. Added autocomplete=off to these three affected selects only. Production return before interaction now shows NC/detailNorthCarolina, score/Priorityscore legend, and all/12rows consistently. JS/CSS assets remain identical.
 
 Final follow-up source checkpoint 5871ab6740e540e605778f0cea21adcc31b46a0c: clean source/PLAN comparisons and no untracked relevant source before and after a fresh build, 17/17 browser suite, and actual final production native Back before interaction. Controls and dependent content agreed; warnings/errors empty. Only HTML autocomplete attributes changed, with identical JS/CSS assets. Independent witness/review remains the next gate.
+
+
+## Live revision exploratory round — October 9, 2026
+
+New model tests first returned24/25: relaxing setup to admit a tenth candidate made the rank explanation look up a nonexistent prior tenth-place peer. This real failure was fixed by naming newly qualifying candidates for that case. Final25/25 is observed after restarting the test server: its module transform cache had continued returning the old module despite changed source on disk. Production used the fresh fingerprinted build throughout.
+
+Actual growth70 produced TN74.14/GA68.28 and all four moves with10.8%/8.4%,48.3% normalized growth weight and5.00→9.66 relative contribution. Browser clipboard includes Tennessee2→1 and sensitivity. Blank growth retained last valid results with labeled error and disabled Copy; all-zero gave no score/rank, sweep0unranked/1–100TN. Native ArrowUp27→28 switched GA→TN. Setup300k admittedFL75.50 and explained its entry/other rank shifts; setup0 showed no qualifying markets and0–100 no-ranking sweep. Reset recovered defaults. Source/normalization/gates retained prior independent boundaries.
+
+First revised layouts measured2546px desktop and3813px at389px width: too long with all views stacked. Added explicit Ranking and sensitivity / Map and market detail views. Initial390 frame now measures389/389 and2454px height; all3 local fonts loaded. Production map hide/show/fit recovered real polygons. Actual top-four fills: GA#012169,TN#005587,NC#00539B,VA#0577B1; legend separates67.50,67.00,61.75,61.25. Delivery metric uses normalized higher-better score and correctly relabels legend. Native selector changed detail toTN. Away/Back after weight70/metric/market/sensitivity changes restored25/defaultGA/score/NC/growth consistently before interaction.
+
+Tool-only locator failures retained: native disclosure buttons were exposed differently to AX versus Playwright role queries; source-backed summary locators resolved that. An attempted gate fill encountered a disclosure accidentally closed by the test (Reset preserves disclosure position); reopened once and verified. Exact implicit-label query for sensitivity select did not match; its explicit ID worked. No product failure was inferred from these.
+
+Final source checkpoint, final320/1440, keyboard/pin and current view-boundary checks remain pending. No complete network/accessibility or clipboard-denial claim.

@@ -5,5 +5,5 @@ export function duke() {
   return { navy: color('navy-blue'), royal: color('royal-blue'), copper: color('copper'),
     teal: color('magnolia'), ironweed: color('ironweed'), paper: color('white'),
     panel: color('hatteras'), ink: color('cast-iron'), muted: color('graphite'),
-    heading: 'Georgia, serif', body: 'Arial, sans-serif' };
+    heading: css.getPropertyValue('--duke-font-heading').trim(), body: css.getPropertyValue('--duke-font-body').trim() };
 }

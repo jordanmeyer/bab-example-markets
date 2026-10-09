@@ -21,7 +21,7 @@ export const markets=[
  ['WV','West Virginia',280000000,-1,1350,25,10000000,'Delivery exceeds the starting ceiling; investigate service economics first.'],
 ].map(([id,name,revenue,growth,delivery,competition,setup,note])=>({id,name,revenue,growth,delivery,competition,setup,note}));
 export const money=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(value/100);
-export const cost=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format(value/100);
+export const cost=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:value%100?2:0,maximumFractionDigits:2}).format(value/100);
 export const compact=value=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',notation:'compact',maximumFractionDigits:2}).format(value/100);
 export function raw(market,key){return market[key]===null?'Missing':key==='revenue'?compact(market[key]):key==='delivery'?cost(market[key]):key==='growth'?`${market[key].toFixed(1)}%`:`${market[key]} / 100`;}
 export function validate(settings){
@@ -48,8 +48,40 @@ export function rank(data,settings){
  ranked.forEach((row,index)=>row.rank=index+1);
  return {rows,ranked,top:ranked.slice(0,3),weightTotal:metrics.reduce((sum,{id})=>sum+settings[id],0)};
 }
+// Compare with a fixed starting screen so typing one digit does not erase the explanation.
+export function rankChanges(data,before,after){
+ const old=rank(data,before),current=rank(data,after);
+ const gateMoves=current.rows.filter(row=>row.eligible!==old.rows.find(prior=>prior.id===row.id).eligible).map(row=>`${row.name} ${row.eligible?'qualifies now':'is now excluded'}`).join('; ');
+ const gateCause=`Changed eligibility moved the rank: ${gateMoves}.`;
+ return current.rows.flatMap(row=>{
+  const prior=old.rows.find(item=>item.id===row.id);
+  if(prior.rank===row.rank)return [];
+  const move={id:row.id,name:row.name,from:prior.rank,to:row.rank};
+  if(!row.rank)return [{...move,cause:row.reasons.join('; ')||'All priorities have zero weight.'}];
+  if(!prior.rank)return [{...move,cause:prior.reasons.length?`Now qualifies after the ceilings changed. Previously blocked by: ${prior.reasons.join('; ')}.`:'Positive priorities now allow a score.'}];
+  const peer=old.ranked[row.rank-1];
+  if(!peer)return [{...move,cause:gateCause}];
+  const peerNow=current.rows.find(item=>item.id===peer.id);
+  if(!peerNow.rank)return [{...move,cause:`${peer.name} left the ranking: ${peerNow.reasons.join('; ')}`}];
+  const changes=row.components.map((part,i)=>({metric:metrics[i],share:part.share,oldGap:prior.components[i].contribution-peer.components[i].contribution,newGap:part.contribution-peerNow.components[i].contribution}));
+  const driver=changes.sort((a,b)=>Math.abs(b.newGap-b.oldGap)-Math.abs(a.newGap-a.oldGap))[0];
+  if(Math.abs(driver.newGap-driver.oldGap)<1e-9)return [{...move,cause:gateCause}];
+  return [{...move,cause:`Against ${peer.name}, ${driver.metric.short.toLowerCase()} is the largest contribution to the changed score gap: ${raw(row,driver.metric.id)} versus ${raw(peer,driver.metric.id)}. Its weight is now ${(driver.share*100).toFixed(1)}% of the total; this part of the gap moved from ${driver.oldGap.toFixed(2)} to ${driver.newGap.toFixed(2)} points.`}];
+ }).sort((a,b)=>(a.to??Infinity)-(b.to??Infinity)||a.name.localeCompare(b.name,'en'));
+}
+// Integer sweep, not an interpolated claim about fractional breakpoints.
+export function sensitivity(data,settings,metric){
+ const bands=[];
+ for(let value=0;value<=100;value++){
+  const leader=rank(data,{...settings,[metric]:value}).top[0];
+  const last=bands.at(-1),id=leader?.id??null;
+  if(last&&last.id===id)last.to=value;
+  else bands.push({from:value,to:value,id,name:leader?.name??'No ranking'});
+ }
+ return bands;
+}
 export function rationale(result,settings,pins){
  const weights=metrics.map(({id,short})=>`${short}: ${settings[id]} weight (${result.weightTotal?(settings[id]/result.weightTotal*100).toFixed(1):'0.0'}%)`).join('; ');
  const describe=row=>`${row.name}: ${row.score===null?'Unscored':row.score.toFixed(2)+' / 100'}; revenue ${money(row.revenue)}/year; growth ${raw(row,'growth')}; delivery ${cost(row.delivery)}/order; competition ${row.competition}/100; setup ${money(row.setup)}. ${row.reasons.length?'Excluded: '+row.reasons.join('; '):row.score===null?'No ranking: all weights zero.':'Qualifies.'}`;
- return `REPLENISH — SYNTHETIC CLASSROOM MARKET SCREEN\nFictional refill-supply service. These inputs are invented; scores are not forecasts or real market assessments.\n\nEligibility ceilings: delivery ${cost(settings.deliveryLimit)}/order; setup ${cost(settings.setupLimit)}. Equality qualifies.\n${weights}\nFixed anchors (0→100): revenue $2m→$12m; growth 0%→12%; delivery $12→$4; competition 100→0. Scores capped at 0/100. Missing metrics prevent ranking. Exact ties: alphabetical.\n\nAUTOMATIC TOP THREE\n${result.top.length?result.top.map(describe).join('\n'):'No markets can be ranked under these settings.'}\n\nMY PINNED COMPARISON (not the automatic ranking)\n${pins.length?pins.map(id=>describe(result.rows.find(row=>row.id===id))).join('\n'):'No markets pinned.'}\n\nPublic geometry: U.S. Census Bureau, Generalized ACS2024 States20M, January1,2024 vintage. Commercial attributes are unrelated synthetic data.\nSource: https://github.com/jordanmeyer/bab-example-markets`;
+ return `REPLENISH — SYNTHETIC CLASSROOM MARKET SCREEN\nFictional refill-supply service. These inputs are invented; scores are not forecasts or real market assessments.\n\nEligibility ceilings: delivery ${cost(settings.deliveryLimit)}/order; setup ${cost(settings.setupLimit)}. Equality qualifies.\n${weights}\nFixed anchors (0→100): revenue $2m→$12m; growth 0%→12%; delivery $12→$4; competition 100→0. Scores capped at 0/100. Missing metrics prevent ranking. Exact ties: alphabetical.\n\nAUTOMATIC TOP THREE\n${result.top.length?result.top.map(describe).join('\n'):'No markets can be ranked under these settings.'}\n\nMY PINNED COMPARISON (not the automatic ranking)\n${pins.length?pins.map(id=>describe(result.rows.find(row=>row.id===id))).join('\n'):'No markets pinned.'}\n\nCHANGES FROM THE STARTING SCREEN\n${rankChanges(markets,defaults,settings).map(row=>`${row.name}: ${row.from??'unranked'} → ${row.to??'unranked'}. ${row.cause}`).join('\n')||'Starting ranks unchanged.'}\n\nGROWTH WEIGHT SENSITIVITY (integer weights; all other settings held fixed)\n${sensitivity(markets,settings,'growth').map(band=>`${band.from}–${band.to}: ${band.name}`).join('; ')}\n\nPublic geometry: U.S. Census Bureau, Generalized ACS2024 States20M, January1,2024 vintage. Commercial attributes are unrelated synthetic data.\nSource: https://github.com/jordanmeyer/bab-example-markets`;
 }
