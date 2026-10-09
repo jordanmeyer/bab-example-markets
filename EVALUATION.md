@@ -1,0 +1,13 @@
+# Evaluation
+
+## Exploratory round1 —2026-10-09, before source checkpoint
+
+Browser model/geometry suite17/17 passed. Independent references precede observation in PLAN.md: NC61.75, GA67.50/TN67.00/defaulttop3, exact gates and known NC geographic extent. Actual production prefix loaded real Leaflet polygons,12labels and9eligible markets; no warning/error browser logs were observed. Desktop1440px fixed frame visually inspected. Pin NC, tighten delivery to$7 and Apply left onlyTN in automatictop3, preserved NC pin with explicit exclusion, and copied rationale contained applied$7gate, exact scores/raw evidence and synthetic caveat.
+
+Pre-browser source inspection corrected a narrow-grid CSS punctuation typo, used actual adapter token keys rather than undefined color aliases, and ensured setup ceilings retain cent precision in displayed/copied comparisons. These were fixed before the first rendered model checks, not reported as browser failures. Model accuracy did not fail during this round. Additional UI checks, clean source evaluation and independent review pending.
+
+Production keyboard checks then verified Louisiana unscored/missing, maximum3pins, removal when the row is filtered out (focus returns to Copy), blank-weight rejection preserving prior top3, all-zero weights with no ranking, zero delivery with no qualifiers/empty table, each map color legend, hide/show with22polygon paths, zoom/fit, and direct Georgia polygon selection updating detail/select. Copy reads applied state. Browser warnings/errors remained empty.
+
+A real narrow failure was observed: html client319/scroll874 and native horizontal scrolling moved the whole page554px into blank space. Body/main widths were320 and the method grid was288px; the wide ledger's absolute screen-reader-only spans escaped its scroll containment because their containing block was the root. Adding position:relative to the text buttons containing those spans fixed the source of overflow. Rebuilt production measured319/319; native sideways scroll stayed0. No document-wide overflow hiding was used. Failed output is retained here rather than described as a tool-only artifact.
+
+Clean npm ci reported zero vulnerabilities. The canonical dependency checker actually exited1 with `Unapproved dependency: leaflet@1.9.4`, as expected for the explicitly authorized candidate. This is an open inventory promotion gate, not a passing checker result. Direct manifest/registry lock and installed BSD2-Clause notice were inspected. The coordinator accepted candidate rejection until full app review, as recorded in the simulated exchange. No plugin checker was edited or bypassed.
