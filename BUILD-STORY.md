@@ -23,3 +23,6 @@ Browser App Builder Build, Evaluate, Deploy and Leaflet guidance structure the w
 ## Try the lesson
 
 [Prediction exercises and answers](WALKTHROUGH.md) connect weight sensitivity, Florida's feasibility ceiling, Louisiana's missing-data policy and a short assumptions worksheet. An optional one-assumption editor is a bounded student extension, not an implemented feature. Current corrections use precise addressable-market terminology and distinguish map status from priority. Screen-reader, novice and physical touch evidence is not claimed.
+
+
+The enlarged-text review exposed a layout failure even though the document width fit: Reset overlapped the ranking and a weight digit clipped. The control layout now wraps according to text-relative preferred widths, stacks each input above its normalized share and lets the heading/reset row wrap. The failed round remains in EVALUATION; this source change awaits an actual production visual retest.
