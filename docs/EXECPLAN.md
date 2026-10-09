@@ -14,7 +14,8 @@ Help a fictional refill-supply business compare12 states without mistaking a wei
 - [x] (2026-10-09) Implement full model, local Leaflet map, linked ledger/detail, manual pins and copied rationale.
 - [x] (2026-10-09)17/17 browser model/geometry checks and production edge interactions passed; fix observed319→874px narrow overflow from absolute accessible-name spans, then verify319/319 and zero page horizontal scroll.
 - [x] (2026-10-09) Freeze initial source and retain final-check failure: native history restored form values but default results. Disable native form restoration; applied/pending away-Back cases reset consistently.
-- [ ] Freeze revised source and complete independent review/witness.
+- [x] (2026-10-09) Freeze65ceb49c5eb6d0b1fdde33628c92a22f1aba5e06; clean pre/post source/PLAN, repeat17/17 and native return-state checks.
+- [ ] Complete independent review/witness and inventory promotion gate.
 - [ ] Handoff passing source/reports to coordinator for publication.
 
 ## Surprises & Discoveries
@@ -56,3 +57,5 @@ All required workflow documents will identify exact tested source, simulated exc
 ## Interfaces and Dependencies
 
 validate(settings) returns field errors; assess(market,settings) returns component scores/contributions, eligibility reasons and total; rank(markets,settings) returns all assessed rows and eligible ordered rows. All application state stays in memory. Leaflet1.9.4 supplies local polygon/label/map controls; no tile layer/default remote icons. Cleanup skips persisted pagehide and removes map/observer on actual destruction.
+
+Follow-up: independently reproduced native restoration mismatch also affected outside-form selects. Disable restoration on the affected selectors, verify actual Back before interaction, and freeze a new source checkpoint.
